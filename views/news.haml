@@ -66,6 +66,12 @@
                 %li= "<a ng-click='loadFeed(", feed.Id, ")'>", feed.Title, "</a>"
               - }
 
+              %li.nav-header Options
+              %li
+                %input{type="text", placeholder="Feed URL", ng-model="newFeedURL"}
+                %br/
+                %button.btn.btn-small{ng-click="addFeed()"} <i class="icon-plus"></i> Add Feed
+
         .span9
           .row-fluid
             %h3 {{ feedName }}

@@ -85,6 +85,12 @@ var NewsHtml = [...]string{
 								`,
 								`
 							</li>
+							<li class="nav-header">Options</li>
+							<li>
+								<input type="text" placeholder="Feed URL" ng-model="newFeedURL"></input>
+								<br />
+								<button class="btn btn-small" ng-click="addFeed()"><i class="icon-plus"></i> Add Feed</button>
+							</li>
 						</ul>
 					</div>
 				</div>
