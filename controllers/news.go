@@ -37,6 +37,7 @@ func NewsController(ctx *mvc.WebContext, params url.Values) mvc.ControllerResult
 	return mvc.Haml(wr, newsPage, ctx)
 }
 
+// NewsEntriesJSONController handles JSON requests for entries for a given feed
 func NewsEntriesJSONController(ctx *mvc.WebContext, params url.Values) mvc.ControllerResult {
 	if ctx == nil {
 		return mvc.Error("Context is nil, unable to proceed", ctx)
@@ -78,17 +79,33 @@ func AddFeedJSONController(ctx *mvc.WebContext, params url.Values) mvc.Controlle
 	}
 	feedUrl := feedIdInterface.(string)
 
-	_, err = rssEngine.AddFeedForUser(ctx.User.Id, feedUrl)
+	feed, entries, err := rssEngine.AddFeedForUser(ctx.User.Id, feedUrl)
+
+	if feed == nil {
+		fmt.Printf("Feed is nil\n")
+	} else {
+		fmt.Printf("AddFeed: feed is: %d - %s\n", feed.Id, feed.Title)
+	}
+
+	if entries == nil {
+		fmt.Printf("Entries are nil\n")
+	} else {
+		fmt.Printf("Entries parsed: %d\n", len(entries))
+	}
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	newEntry := &models.NewEntryResponse{}
-	if feedUrl == "" {
-		newEntry.ErrorMessage = "Error, feedUrl is missing"
+	if feed == nil {
+		newEntry.ErrorMessage = "Returned nil feed"
+	} else if err == nil {
+		newEntry.FeedId = feed.Id
+		newEntry.FeedName = feed.Title
+		newEntry.Entries = entries
 	} else {
-		newEntry.ErrorMessage = "You posted: " + feedUrl
+		newEntry.ErrorMessage = err.Error()
 	}
 
 	return mvc.Json(newEntry, ctx)

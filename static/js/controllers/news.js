@@ -24,6 +24,11 @@ function NewsController($scope, $http) {
 	  }
 	  var data = {feedUrl: url};
 	  $http.post('/news/newfeed', data).success(function(data) {
+		  if (data.ErrorMessage == nil || data.ErrorMessage.length == 0) {
+			  $scope.entries = data.Entries;
+			  $scope.feedName = data.FeedName
+		  } else {
+		  }
 		  $scope.error("returned from server: " + data.ErrorMessage);
 	  });
   }

@@ -77,7 +77,7 @@
             %h3 {{ feedName }}
             %accordion{close-others="true"}
               %accordion-group{heading="{{entry.Title}}", ng-repeat="entry in entries"}
-                {{entry.Summary}}
+                %div{ng-bind-html-unsafe="entry.Summary"}
 
       %hr
 
