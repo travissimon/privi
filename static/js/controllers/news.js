@@ -1,14 +1,23 @@
-angular.module('news', ['ui.bootstrap']);
+news = angular.module('news', ['ui.bootstrap']);
 
 function NewsController($scope, $http) {
+  $scope.pendingFeedName = "";
   $scope.feedName = 'News';
+  $scope.feeds = [];
   $scope.entries = [];
   $scope.newFeedURL = "";
 
+  $scope.loadFeeds = function() {
+	  $http.get('/news/allFeeds').success(function(data) {
+		  $scope.feeds = data;
+	  });
+  }
+
   $scope.loadFeed = function(feedId, feedName) {
+	  $scope.pendingFeedName = feedName
 	  $http.get('/news/' + feedId).success(function(data) {
 		  $scope.entries = data;
-		  $scope.feedName = feedName;
+		  $scope.feedName = $scope.pendingFeedName;
 	  });
   }
 
@@ -24,9 +33,18 @@ function NewsController($scope, $http) {
 	  }
 	  var data = {feedUrl: url};
 	  $http.post('/news/newfeed', data).success(function(data) {
+		  $scope.error("returned from server: " + JSON.stringify(data));
 		  if (data.ErrorMessage == nil || data.ErrorMessage.length == 0) {
-			  $scope.entries = data.Entries;
-			  $scope.feedName = data.FeedName
+			  var newFeed = {
+				  Id: data.FeedId,
+				  Title: data.FeedName,
+			  };
+			  // find alphebetised insertion point
+			  var idx = 0;
+			  while (idx < $scope.feeds.length && newFeed.Title < $scope.feeds[i].Title)
+				  idx++;
+
+			  $scope.feeds.splice(idx, 0, newFeed);
 		  } else {
 		  }
 		  $scope.error("returned from server: " + data.ErrorMessage);

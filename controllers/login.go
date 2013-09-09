@@ -30,8 +30,12 @@ func LoginPostController(ctx *mvc.WebContext, params url.Values) mvc.ControllerR
 	login.User = user
 	login.IsLoggedIn = err == nil
 
-	if login.IsLoggedIn && redirectUrl != "" {
-		return mvc.Redirect(redirectUrl, ctx)
+	if login.IsLoggedIn {
+		newUrl := redirectUrl
+		if len(newUrl) == 0 {
+			newUrl = "/"
+		}
+		return mvc.Redirect(newUrl, ctx)
 	}
 
 	wr := views.NewLoginWriter()
@@ -58,9 +62,17 @@ func NewUserController(ctx *mvc.WebContext, params url.Values) mvc.ControllerRes
 
 // Handles POSTs from New User controller
 func NewUserPostController(ctx *mvc.WebContext, params url.Values) mvc.ControllerResult {
-	username := params.Get("txtNewUsername")
-	password := params.Get("txtNewPassword")
-	email := params.Get("txtNewEmailAddress")
+	username := params.Get("txtUsername")
+	password := params.Get("txtPassword")
+	passwordConfirm := params.Get("txtPasswordConfirm")
+	email := params.Get("txtRecoveryEmail")
+
+	if password != passwordConfirm {
+		login := new(models.LoginResult)
+		login.LoginSource = models.Form
+		login.IsLoggedIn = false
+		login.Error = "Password and confirmation don't match"
+	}
 
 	user, err := ctx.CreateUser(username, password, email)
 

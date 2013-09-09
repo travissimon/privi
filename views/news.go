@@ -77,14 +77,9 @@ var NewsHtml = [...]string{
 			<div class="row-fluid">
 				<div class="span3">
 					<div class="well sidebar nav">
-						<ul class="nav nav-list">
-							<li class="nav-header">Feeds</li>
-							`,
-							`
-							<li>
-								`,
-								`
-							</li>
+						<ul class="nav nav-list" ng-init="loadFeeds()">
+							<li class="nav-header">Feeds Dynamic</li>
+							<li ng-repeat="feed in feeds"> <a ng-click='loadFeed(feed.Id)'>{{feed.Title}}</a></li>
 							<li class="nav-header">Options</li>
 							<li>
 								<input type="text" placeholder="Feed URL" ng-model="newFeedURL"></input>
@@ -120,7 +115,6 @@ var NewsHtml = [...]string{
 
 var NewsTemplatePatterns = []string{
 	`Logged in as <a href='/userdetails/{{.Username }}' class='navbar-link'>{{.Username}}</a>`,
-	`<a ng-click='loadFeed({{.Id}})'>{{.Title}}</a>`,
 }
 
 var NewsTemplates = make([]*template.Template, 0, len(NewsTemplatePatterns))
@@ -135,12 +129,6 @@ func (wr *NewsWriter) ExecuteData(w http.ResponseWriter, r *http.Request, data *
 	err = NewsTemplates[0].Execute(w, data)
 	handleNewsError(err)
 	fmt.Fprint(w, NewsHtml[1])
-	for _, feed := range data.Feeds {
-		fmt.Fprint(w, NewsHtml[2])
-		err = NewsTemplates[1].Execute(w, feed)
-		handleNewsError(err)
-	}
-	fmt.Fprint(w, NewsHtml[3])
 if err != nil {err = nil}}
 
 func handleNewsError(err error) {

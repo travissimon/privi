@@ -15,4 +15,5 @@ type LoginResult struct {
 	IsLoggedIn  bool
 	LoginSource LoginSource
 	User        *mvc.User
+	Error       string
 }

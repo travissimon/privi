@@ -56,7 +56,7 @@
 
     .container
 
-      %form.form-signin
+      %form.form-signin{method="post"}
         %h2.form-signin-heading Create New User
 
         %input.input-block-level{type="text", name="txtUsername", placeholder="Username"}/
@@ -68,7 +68,6 @@
 
         %button.btn.btn-large.btn-primary{type="submit"} Sign in
 
-        %p <a href="/NewUser">Create New Account</a>
     %script{src="/static/js/jquery-1.9.1.js"}
     %script{src="/static/js/bootstrap.min.js"}
 

@@ -57,7 +57,7 @@ var NewUserHtml = [...]string{
 	</head>
 	<body style="zoom: 1;">
 		<div class="container">
-			<form class="form-signin">
+			<form class="form-signin" method="post">
 				<h2 class="form-signin-heading">Create New User</h2>
 				<input class="input-block-level" type="text" name="txtUsername" placeholder="Username" />
 				<input class="input-block-level" type="password" name="txtPassword" placeholder="Password" />
@@ -67,7 +67,6 @@ var NewUserHtml = [...]string{
 					<input type="checkbox" value="remember-me" /> Remember me
 				</label>
 				<button class="btn btn-large btn-primary" type="submit">Sign in</button>
-				<p><a href="/NewUser">Create New Account</a></p>
 			</form>
 		</div>
 		<script src="/static/js/jquery-1.9.1.js"></script>

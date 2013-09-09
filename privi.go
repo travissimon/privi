@@ -26,6 +26,7 @@ func main() {
 
 	// News
 	handler.AddRoute("News", "/news", mvc.GET, controllers.NewsController)
+	handler.AddRoute("All Feed Stubs", "/news/allFeeds", mvc.GET, controllers.FeedStubsForUserController)
 	handler.AddRoute("New Feed Post", "/news/newfeed", mvc.POST, controllers.AddFeedJSONController)
 	handler.AddRoute("Entries", "/news/{FeedId}", mvc.GET, controllers.NewsEntriesJSONController)
 

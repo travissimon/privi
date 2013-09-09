@@ -37,6 +37,23 @@ func NewsController(ctx *mvc.WebContext, params url.Values) mvc.ControllerResult
 	return mvc.Haml(wr, newsPage, ctx)
 }
 
+func FeedStubsForUserController(ctx *mvc.WebContext, params url.Values) mvc.ControllerResult {
+	if ctx == nil {
+		return mvc.Error("Context is nil, unable to proceed", ctx)
+	}
+	if !ctx.IsUserLoggedIn() {
+		return mvc.Redirect("/login?RedirectUrl=/news", ctx)
+	}
+
+	userId := ctx.User.Id
+	feeds, err := rssEngine.GetFeedStubsForUser(userId)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return mvc.Json(feeds, ctx)
+}
+
 // NewsEntriesJSONController handles JSON requests for entries for a given feed
 func NewsEntriesJSONController(ctx *mvc.WebContext, params url.Values) mvc.ControllerResult {
 	if ctx == nil {
@@ -79,6 +96,8 @@ func AddFeedJSONController(ctx *mvc.WebContext, params url.Values) mvc.Controlle
 	}
 	feedUrl := feedIdInterface.(string)
 
+	fmt.Printf("Adding URL: %s\n", feedUrl)
+
 	feed, entries, err := rssEngine.AddFeedForUser(ctx.User.Id, feedUrl)
 
 	if feed == nil {
@@ -107,6 +126,8 @@ func AddFeedJSONController(ctx *mvc.WebContext, params url.Values) mvc.Controlle
 	} else {
 		newEntry.ErrorMessage = err.Error()
 	}
+
+	fmt.Printf("Returning: %v\n", newEntry)
 
 	return mvc.Json(newEntry, ctx)
 }

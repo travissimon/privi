@@ -60,11 +60,10 @@
       .row-fluid
         .span3
           .well.sidebar.nav
-            %ul.nav.nav-list
-              %li.nav-header Feeds
-              - for _, feed := range data.Feeds {
-                %li= "<a ng-click='loadFeed(", feed.Id, ")'>", feed.Title, "</a>"
-              - }
+            %ul.nav.nav-list{ng-init="loadFeeds()"}
+              %li.nav-header Feeds Dynamic
+              %li{ng-repeat="feed in feeds"}
+                <a ng-click='loadFeed(feed.Id)'>{{feed.Title}}</a>
 
               %li.nav-header Options
               %li
