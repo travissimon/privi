@@ -94,7 +94,11 @@ var NewsHtml = [...]string{
 						<h3>{{ feedName }}</h3>
 						<accordion close-others="true">
 							<accordion-group heading="{{entry.Title}}" ng-repeat="entry in entries">
-								<div ng-bind-html-unsafe="entry.Summary"></div>
+								<div ng-bind-html-unsafe="entry.Body"></div>
+								<div></div>
+								<p ng-hide="entry.Url.length == 0">
+									<a href="{{entry.Url}}">full story</a>
+								</p>
 							</accordion-group>
 						</accordion>
 					</div>

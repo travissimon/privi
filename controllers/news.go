@@ -78,7 +78,26 @@ func NewsEntriesJSONController(ctx *mvc.WebContext, params url.Values) mvc.Contr
 		return mvc.Error(err.Error(), ctx)
 	}
 
-	return mvc.Json(entries, ctx)
+	posts := getNewsPostsFromEntries(entries)
+
+	return mvc.Json(posts, ctx)
+}
+
+func getNewsPostsFromEntries(entries []*rss.Entry) (posts []*models.NewsPost) {
+	p := make([]*models.NewsPost, 0, len(entries))
+	for _, entr := range entries {
+		post := &models.NewsPost{
+			Title: entr.Title,
+			Url:   entr.Link,
+		}
+		if len(entr.Summary) > len(entr.Content) {
+			post.Body = entr.Summary
+		} else {
+			post.Body = entr.Content
+		}
+		p = append(p, post)
+	}
+	return p
 }
 
 func AddFeedJSONController(ctx *mvc.WebContext, params url.Values) mvc.ControllerResult {
